@@ -1,4 +1,4 @@
-# Aqua 🌊🐟
+# Aqua Bottle (aqua_bottle) 🌊🐟
 
 A **60fps reactive water wave ripple physics & aquatic simulation background package** for Flutter applications.
 
@@ -24,18 +24,18 @@ Features 12 hyper-realistic fish species (*Koi, Betta, Discus, Clownfish, Angelf
 
 ## Installation
 
-Add `aqua` to your `pubspec.yaml`:
+Add `aqua_bottle` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  aqua: ^1.0.0
+  aqua_bottle: ^1.0.0
 ```
 
 Or reference via Git:
 
 ```yaml
 dependencies:
-  aqua:
+  aqua_bottle:
     git:
       url: https://github.com/aswintbbc/aqua.git
       ref: main
@@ -56,7 +56,7 @@ Wrap your screen or dashboard UI with `AquariumBackground`:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:aqua/aqua.dart';
+import 'package:aqua_bottle/aqua.dart';
 
 class MyScreen extends StatelessWidget {
   const MyScreen({super.key});
