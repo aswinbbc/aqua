@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.6
+
+- Replaced README GIF demo with a high-clarity 60fps MP4 video demonstration for perfect color rendering and smooth playback.
+- Referenced raw GitHub URL for online markdown video autoplay support.
+
 ## 1.0.5
 
 - Cropped README GIF preview to show only the web app browser window, removing surrounding macOS desktop environment.

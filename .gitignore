@@ -43,3 +43,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Media raw records
+doc/demo.mov
+doc/screen_recording.mp4
+doc/web_recording.mp4
