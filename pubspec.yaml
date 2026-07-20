@@ -1,6 +1,6 @@
-name: aqua
+name: aqua_background
 description: "A 60fps reactive water wave ripple physics & aquatic simulation background package for Flutter with 12 realistic fish species and marine creatures."
-version: 1.2.6
+version: 1.0.0
 homepage: https://github.com/aswintbbc/aqua
 repository: https://github.com/aswintbbc/aqua
 issue_tracker: https://github.com/aswintbbc/aqua/issues

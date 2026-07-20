@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## 1.2.6
+## 1.0.0
 
-- Release of `aqua` Flutter package.
+- Initial release of `aqua_background` Flutter package.
 - 60fps reactive water wave ripple physics with optical refraction & splash particle generation.
 - 12 realistic fish species (*Koi, Betta, Discus, Clownfish, Angelfish, Guppy, Blue Tang, Neon Tetra, Black Moor*).
 - 6 non-fish marine creatures (*Bioluminescent Jellyfish, Green Sea Turtle, Manta Ray, Seahorse, Starfish, Hermit Crab*).
