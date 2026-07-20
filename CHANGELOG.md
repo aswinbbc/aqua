@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.4
+
+- Replaced README GIF demo with a high-definition web browser simulation demonstration showing 60fps reactive water waves, feeding mechanisms, and creatures.
+
 ## 1.0.3
 
 - Replaced README GIF demo with a high-definition feature demonstration video showing live water wave ripples, food drop feeding reaction, and aquatic theme switching.
