@@ -1,9 +1,9 @@
 name: aqua_bottle
 description: "A 60fps reactive water wave ripple physics & aquatic simulation background package for Flutter with 12 realistic fish species and marine creatures."
-version: 1.0.0
-homepage: https://github.com/aswintbbc/aqua
-repository: https://github.com/aswintbbc/aqua
-issue_tracker: https://github.com/aswintbbc/aqua/issues
+version: 1.0.1
+homepage: https://github.com/aswinbbc/aqua
+repository: https://github.com/aswinbbc/aqua
+issue_tracker: https://github.com/aswinbbc/aqua/issues
 
 environment:
   sdk: ^3.10.3

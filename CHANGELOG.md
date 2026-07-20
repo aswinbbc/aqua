@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.1
+
+- Fixed pub.dev README GIF preview link to use relative documentation path.
+- Updated repository and issue tracker URLs to `https://github.com/aswinbbc/aqua`.
+
 ## 1.0.0
 
 - Initial release of `aqua_bottle` Flutter package.
