@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.3
+
+- Replaced README GIF demo with a high-definition feature demonstration video showing live water wave ripples, food drop feeding reaction, and aquatic theme switching.
+
 ## 1.0.2
 
 - Optimized GIF demo size (858 KB) for fast loading & full pub.dev preview compatibility.

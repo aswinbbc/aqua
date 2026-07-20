@@ -77,7 +77,6 @@ class _AquariumViewState extends State<AquariumView> with SingleTickerProviderSt
       );
     });
 
-    // Initialize diverse Aquatic Creatures (Jellyfish, Turtle, Manta Ray, Seahorse, Starfish, Crab)
     final List<CreatureType> creatureTypes = CreatureType.values;
     _creatures = List.generate(creatureTypes.length * 2, (i) {
       CreatureType type = creatureTypes[i % creatureTypes.length];
@@ -210,7 +209,6 @@ class _AquariumViewState extends State<AquariumView> with SingleTickerProviderSt
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // 1. Seabed & Environment Background Layer
           CustomPaint(
             size: size,
             painter: EnvironmentPainter(
@@ -219,8 +217,6 @@ class _AquariumViewState extends State<AquariumView> with SingleTickerProviderSt
               screenSize: size,
             ),
           ),
-
-          // 2. Non-fish Aquatic Creatures (Jellyfish, Turtle, Manta Ray, Seahorse, Starfish, Crab)
           CustomPaint(
             size: size,
             painter: CreaturePainter(
@@ -228,8 +224,6 @@ class _AquariumViewState extends State<AquariumView> with SingleTickerProviderSt
               animationTime: _animationTime,
             ),
           ),
-
-          // 3. Fish Swimming Layer
           CustomPaint(
             size: size,
             painter: FishPainter(
@@ -237,8 +231,6 @@ class _AquariumViewState extends State<AquariumView> with SingleTickerProviderSt
               animationTime: _animationTime,
             ),
           ),
-
-          // 4. Water Caustics, Surface Waves & Food Layer
           CustomPaint(
             size: size,
             painter: WaterSurfacePainter(
@@ -249,8 +241,6 @@ class _AquariumViewState extends State<AquariumView> with SingleTickerProviderSt
               enableCaustics: _enableCaustics,
             ),
           ),
-
-          // 5. Touch & Drag Gesture Detector across entire screen
           Positioned.fill(
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
@@ -267,8 +257,6 @@ class _AquariumViewState extends State<AquariumView> with SingleTickerProviderSt
               },
             ),
           ),
-
-          // 6. Glassmorphism Controls Overlay UI
           ControlsOverlay(
             fishCount: _fishes.length,
             activeRipplesCount: _ripples.length,
