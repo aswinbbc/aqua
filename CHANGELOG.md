@@ -1,8 +1,13 @@
 # CHANGELOG
 
+## 1.0.2
+
+- Optimized GIF demo size (858 KB) for fast loading & full pub.dev preview compatibility.
+- Updated raw GitHub raw URL for immediate image rendering on pub.dev package homepage.
+
 ## 1.0.1
 
-- Fixed pub.dev README GIF preview link to use relative documentation path.
+- Fixed pub.dev README GIF preview link.
 - Updated repository and issue tracker URLs to `https://github.com/aswinbbc/aqua`.
 
 ## 1.0.0
