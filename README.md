@@ -6,9 +6,9 @@ Features 12 hyper-realistic fish species (*Koi, Betta, Discus, Clownfish, Angelf
 
 ---
 
-## Screen Recording Demo
+## Interactive Feature Actions Demo
 
-![Aqua Live Reactive Aquarium Demo](/Users/aswint/.gemini/antigravity/brain/af9cdba5-9fe9-478d-8c8b-11eebd9eaa18/screen_recording.mp4)
+![Aqua Live Reactive Aquarium Demo](https://raw.githubusercontent.com/aswintbbc/aqua/main/doc/demo.gif)
 
 ---
 
@@ -31,12 +31,14 @@ dependencies:
   aqua: ^1.0.0
 ```
 
-Or reference locally / via Git:
+Or reference via Git:
 
 ```yaml
 dependencies:
   aqua:
-    path: /path/to/aqua
+    git:
+      url: https://github.com/aswintbbc/aqua.git
+      ref: main
 ```
 
 Run:
