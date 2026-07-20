@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.5
+
+- Cropped README GIF preview to show only the web app browser window, removing surrounding macOS desktop environment.
+
 ## 1.0.4
 
 - Replaced README GIF demo with a high-definition web browser simulation demonstration showing 60fps reactive water waves, feeding mechanisms, and creatures.
