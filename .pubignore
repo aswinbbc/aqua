@@ -10,4 +10,8 @@ build/
 .idea/
 doc/screen_recording.mp4
 doc/web_recording.mp4
+doc/demo.mov
+doc/demo.gif
 *.mp4
+*.mov
+*.gif
