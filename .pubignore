@@ -9,3 +9,5 @@ build/
 .dart_tool/
 .idea/
 doc/screen_recording.mp4
+doc/web_recording.mp4
+*.mp4
