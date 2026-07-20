@@ -1,0 +1,25 @@
+name: aqua
+description: "A 60fps reactive water wave ripple physics & aquatic simulation background package for Flutter with 12 realistic fish species and marine creatures."
+version: 1.0.0
+homepage: https://github.com/aswint/aqua
+repository: https://github.com/aswint/aqua
+issue_tracker: https://github.com/aswint/aqua/issues
+
+environment:
+  sdk: ^3.10.3
+  flutter: ">=3.18.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  vector_math: ^2.2.0
+  google_fonts: ^8.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
