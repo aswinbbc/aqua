@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../models/aquatic_creature.dart';
+import '../models/fish.dart';
 
 class CreaturePainter extends CustomPainter {
   final List<AquaticCreature> creatures;
@@ -363,6 +364,9 @@ class CreaturePainter extends CustomPainter {
   }
 
   void _drawStarfish(Canvas canvas, AquaticCreature c) {
+    if (c.state == FishState.loading) {
+      canvas.rotate(c.angle);
+    }
     double scale = c.scale;
     double flex = sin(c.pulsePhase) * 2.2;
 
@@ -394,9 +398,13 @@ class CreaturePainter extends CustomPainter {
   }
 
   void _drawHermitCrab(Canvas canvas, AquaticCreature c) {
+    if (c.state == FishState.loading) {
+      canvas.rotate(c.angle);
+    } else {
+      bool facingLeft = c.targetAngle == pi;
+      if (facingLeft) canvas.scale(-1, 1);
+    }
     double scale = c.scale;
-    bool facingLeft = c.targetAngle == pi;
-    if (facingLeft) canvas.scale(-1, 1);
 
     final Paint shellPaint = Paint()
       ..color = c.config.accentColor

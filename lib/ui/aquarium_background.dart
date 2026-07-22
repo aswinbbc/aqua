@@ -81,6 +81,9 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
   late bool _enableCaustics;
   late bool _isControlsVisible;
   bool _isLoading = false;
+  double _timeSinceAligned = 0.0;
+  bool _allAligned = false;
+  double _orbitBaseAngle = 0.0;
   double _animationTime = 0.0;
   DateTime _lastFrameTime = DateTime.now();
 
@@ -264,23 +267,146 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
         _bubbles.clear();
       }
 
-      _fishEngine.update(
-        fishes: _fishes,
-        ripples: _ripples,
-        foodPellets: _foodPellets,
-        bounds: screenSize,
-        dt: dt,
-        isLoading: _isLoading,
-      );
+      if (_isLoading) {
+        _updateLoadingPhysics(dt, screenSize);
+      } else {
+        _allAligned = false;
+        _timeSinceAligned = 0.0;
 
-      if (_creatures.isNotEmpty) {
-        _creatureEngine.update(
-          creatures: _creatures,
+        _fishEngine.update(
+          fishes: _fishes,
+          ripples: _ripples,
+          foodPellets: _foodPellets,
           bounds: screenSize,
           dt: dt,
+          isLoading: false,
         );
+
+        if (_creatures.isNotEmpty) {
+          _creatureEngine.update(
+            creatures: _creatures,
+            bounds: screenSize,
+            dt: dt,
+          );
+        }
       }
     });
+  }
+
+  double _normalizeAngle(double angle) {
+    while (angle > pi) {
+      angle -= 2 * pi;
+    }
+    while (angle < -pi) {
+      angle += 2 * pi;
+    }
+    return angle;
+  }
+
+  void _updateLoadingPhysics(double dt, Size bounds) {
+    final List<dynamic> allObjects = [..._fishes, ..._creatures];
+    if (allObjects.isEmpty) return;
+
+    allObjects.sort((a, b) {
+      final aIsFish = a is Fish;
+      final bIsFish = b is Fish;
+      if (aIsFish != bIsFish) return aIsFish ? -1 : 1;
+      return a.id.compareTo(b.id);
+    });
+
+    double targetY = bounds.height / 2;
+    double padding = 65.0;
+    double availableWidth = bounds.width - padding * 2;
+    double step = (allObjects.length > 1) ? (availableWidth / (allObjects.length - 1)) : 0.0;
+
+    // Check if every single fish and creature is aligned to the horizontal parade line
+    bool currentAligned = true;
+    for (int i = 0; i < allObjects.length; i++) {
+      final obj = allObjects[i];
+      final double targetX = padding + i * step;
+      final Offset targetPos = Offset(targetX, targetY);
+      final double dist = (obj.position - targetPos).distance;
+      if (dist >= 28.0) {
+        currentAligned = false;
+        break;
+      }
+    }
+
+    if (!_allAligned && currentAligned) {
+      _allAligned = true;
+      _timeSinceAligned = 0.0;
+    }
+
+    if (_allAligned) {
+      _timeSinceAligned += dt;
+      // Flawlessly rotate the circular spinner base angle
+      _orbitBaseAngle += dt * 0.98;
+    } else {
+      _timeSinceAligned = 0.0;
+    }
+
+    final double circleRadius = 120.0;
+    final Offset center = Offset(bounds.width / 2, bounds.height / 2);
+
+    for (int i = 0; i < allObjects.length; i++) {
+      final obj = allObjects[i];
+      final double targetX = padding + i * step;
+      final Offset lineTarget = Offset(targetX, targetY);
+
+      Offset target;
+      bool isOrbiting = false;
+
+      // Release one after another with spacing delay
+      if (_allAligned && _timeSinceAligned >= i * 0.36) {
+        isOrbiting = true;
+        // Perfect equal spacing along the shared circle perimeter:
+        double angle = _orbitBaseAngle + i * (2 * pi / allObjects.length);
+        target = Offset(center.dx + cos(angle) * circleRadius, center.dy + sin(angle) * circleRadius);
+      } else {
+        target = lineTarget;
+      }
+
+      final double distToTarget = (obj.position - target).distance;
+
+      // If in align stage and arrived at slot, idle and wait for parade sequence complete
+      if (!isOrbiting && distToTarget < 15.0) {
+        obj.velocity = Offset.zero;
+        // Turn smoothly to face right (military horizontal line format)
+        double angleDiff = _normalizeAngle(0.0 - obj.angle);
+        obj.angle += angleDiff * (8.5 * dt).clamp(0.0, 1.0);
+      } else {
+        // Active steering towards destination
+        Offset dir = target - obj.position;
+        double dist = dir.distance;
+        if (dist > 0.1) {
+          dir = dir / dist;
+        }
+
+        // Fast movement during loading ("all creatures and fishes come fast")
+        double maxSpeed = (obj is Fish) ? obj.config.maxSpeed : obj.config.maxSpeed;
+        double speed = maxSpeed * 1.6;
+
+        double desiredAngle = dir.direction;
+        double angleDiff = _normalizeAngle(desiredAngle - obj.angle);
+        obj.angle += angleDiff * (9.5 * dt).clamp(0.0, 1.0);
+        obj.angle = _normalizeAngle(obj.angle);
+
+        obj.velocity = Offset(cos(obj.angle), sin(obj.angle)) * speed;
+        obj.position += obj.velocity * dt;
+      }
+
+      // Update models and animations wiggles/fins
+      if (obj is Fish) {
+        obj.state = FishState.loading;
+        obj.loadingPhase = isOrbiting ? FishLoadingPhase.orbitingCircle : FishLoadingPhase.aligningLine;
+        _fishEngine.updateSpineSkeleton(obj, dt);
+      } else if (obj is AquaticCreature) {
+        obj.state = FishState.loading;
+        obj.loadingPhase = isOrbiting ? FishLoadingPhase.orbitingCircle : FishLoadingPhase.aligningLine;
+        obj.flipperPhase += dt * 3.5;
+        obj.pulsePhase += dt * 2.5;
+      }
+    }
   }
 
   void _addRipple(Offset position, [double amplitude = 1.0, double maxRadius = 160.0]) {

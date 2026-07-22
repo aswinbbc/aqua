@@ -19,7 +19,7 @@ class FishBehaviorEngine {
 
     for (var fish in fishes) {
       _updateFishBehavior(fish, fishes, ripples, foodPellets, bounds, dt, isLoading);
-      _updateSpineSkeleton(fish, dt);
+      updateSpineSkeleton(fish, dt);
     }
   }
 
@@ -234,7 +234,7 @@ class FishBehaviorEngine {
     fish.position += fish.velocity * dt;
   }
 
-  void _updateSpineSkeleton(Fish fish, double dt) {
+  void updateSpineSkeleton(Fish fish, double dt) {
     // 1. Update Wiggle Phase based on current speed
     double speedRatio = (fish.currentSpeed / fish.config.maxSpeed).clamp(0.1, 2.5);
     double wiggleSpeed = 8.5 * speedRatio * fish.config.tailWiggleMultiplier;

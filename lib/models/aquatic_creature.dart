@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'fish.dart';
 
 enum CreatureType {
   jellyfish,
@@ -116,6 +117,9 @@ class AquaticCreature {
   double pulsePhase;
   double flipperPhase;
 
+  FishState state;
+  FishLoadingPhase loadingPhase;
+
   AquaticCreature({
     required this.id,
     required this.position,
@@ -126,5 +130,7 @@ class AquaticCreature {
         velocity = Offset(cos(angle), sin(angle)) * (CreatureConfig.getConfig(type).maxSpeed * 0.5),
         targetAngle = angle,
         pulsePhase = Random().nextDouble() * 2 * pi,
-        flipperPhase = Random().nextDouble() * 2 * pi;
+        flipperPhase = Random().nextDouble() * 2 * pi,
+        state = FishState.wandering,
+        loadingPhase = FishLoadingPhase.none;
 }

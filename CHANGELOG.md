@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.2.3
+
+- Coordinated both fish and non-fish marine creatures to participate in the loading spinner sequences.
+- Structured loading into two global steps: first all objects swim rapidly to align on a horizontal parade line, face right, and idle until all have arrived. Once aligned, they start entering the orbit circle sequentially one after another.
+- Arranged all participating objects to orbit in a single shared circle maintaining perfectly equal distances along its perimeter, which does not vary in radius or shape based on the population size.
+
 ## 1.2.2
 
 - Implemented a two-stage animation sequence during loading: fish first swim to align on a single evenly-spaced horizontal center line before forming the rotating loading circle vortex.
