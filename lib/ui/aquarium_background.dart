@@ -437,7 +437,16 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
     }
   }
 
+  void _popBubblesAt(Offset position) {
+    if (_bubbles.isEmpty) return;
+    _bubbles.removeWhere((bubble) {
+      final double dist = (bubble.position - position).distance;
+      return dist < (bubble.radius + 22.0);
+    });
+  }
+
   void _addRipple(Offset position, [double amplitude = 1.0, double maxRadius = 160.0]) {
+    _popBubblesAt(position);
     if (_ripples.length > 5) {
       _ripples.removeAt(0);
     }

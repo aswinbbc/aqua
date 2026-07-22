@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.8
+
+- Added interactive bubble popping mechanics: tapping or swiping over rising water bubbles breaks/pops them instantly.
+
 ## 1.2.7
 
 - Allowed the circle spinner sequence to trigger early as soon as any 3 objects are aligned on the horizontal parade line, letting the remaining objects join the circle dynamically as they arrive.
