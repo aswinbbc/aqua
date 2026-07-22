@@ -319,22 +319,19 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
     double availableWidth = bounds.width - padding * 2;
     double step = (allObjects.length > 1) ? (availableWidth / (allObjects.length - 1)) : 0.0;
 
-    // Check if all FISHES are aligned to the horizontal parade line (creatures don't block this check)
-    bool allFishesAligned = true;
+    // Start the loading circle early as soon as any 3 objects are aligned on the horizontal line
+    int alignedCount = 0;
     for (int i = 0; i < allObjects.length; i++) {
       final obj = allObjects[i];
-      if (obj is! Fish) continue; // Only check fish alignment
-      
       final double targetX = padding + i * step;
       final Offset targetPos = Offset(targetX, targetY);
       final double dist = (obj.position - targetPos).distance;
-      if (dist >= 28.0) {
-        allFishesAligned = false;
-        break;
+      if (dist < 28.0) {
+        alignedCount++;
       }
     }
 
-    if (!_allAligned && allFishesAligned) {
+    if (!_allAligned && alignedCount >= 3) {
       _allAligned = true;
       _timeSinceAligned = 0.0;
     }
@@ -415,8 +412,8 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
           }
 
           // Fast movement during loading ("all creatures and fishes come fast")
-          double maxSpeed = (obj is Fish) ? obj.config.maxSpeed : obj.config.maxSpeed;
-          double speed = maxSpeed * 1.6;
+          double maxSpeed = (obj is Fish) ? obj.config.maxSpeed : (obj as AquaticCreature).config.maxSpeed;
+          double speed = max(maxSpeed * 1.6, 125.0);
 
           double desiredAngle = dir.direction;
           double angleDiff = _normalizeAngle(desiredAngle - obj.angle);
@@ -618,6 +615,7 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
             currentPreset: _currentThemePreset,
             enableCaustics: _enableCaustics,
             isControlsVisible: _isControlsVisible,
+            isLoading: _isLoading,
             onFishCountChanged: _setFishCount,
             onDropFood: () => _dropFood(),
             onThemeChanged: (preset) {
@@ -634,6 +632,11 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
             onToggleControlsVisibility: () {
               setState(() {
                 _isControlsVisible = !_isControlsVisible;
+              });
+            },
+            onToggleLoading: () {
+              setState(() {
+                _isLoading = !_isLoading;
               });
             },
           ),

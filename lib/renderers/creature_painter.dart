@@ -200,6 +200,9 @@ class CreaturePainter extends CustomPainter {
   }
 
   void _drawSeahorse(Canvas canvas, AquaticCreature c) {
+    if (c.state == FishState.loading) {
+      canvas.rotate(c.angle + pi / 2);
+    }
     double scale = c.scale;
 
     // Head sway & tail curl phase

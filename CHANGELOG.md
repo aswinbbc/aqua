@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.2.7
+
+- Allowed the circle spinner sequence to trigger early as soon as any 3 objects are aligned on the horizontal parade line, letting the remaining objects join the circle dynamically as they arrive.
+- Corrected sea-bed dweller creature speeds (starfish, crabs, seahorses) to use a fast minimum speed of `125.0px/s` during loading, ensuring they align rapidly.
+- Supported canvas tangent rotation for Seahorse during the loading sequence so it aligns perfectly to the circle tangent direction.
+- Refactored example app `AquariumView` to instantiate `AquariumBackground` directly, and added a simulated "Load Circle" / "Stop Load" toggle action button.
+
 ## 1.2.6
 
 - Implemented strict circular orbit locking for all fishes and creatures once they arrive on the loading spinner. This eliminates overshoot-correction feedback loops that caused goldfish jittering and guppies spinning/rotating.

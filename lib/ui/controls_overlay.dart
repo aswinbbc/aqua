@@ -9,12 +9,14 @@ class ControlsOverlay extends StatelessWidget {
   final AquariumThemePreset currentPreset;
   final bool enableCaustics;
   final bool isControlsVisible;
+  final bool isLoading;
   final ValueChanged<int> onFishCountChanged;
   final VoidCallback onDropFood;
   final ValueChanged<AquariumThemePreset> onThemeChanged;
   final ValueChanged<bool> onToggleCaustics;
   final VoidCallback onResetAquarium;
   final VoidCallback onToggleControlsVisibility;
+  final VoidCallback onToggleLoading;
 
   const ControlsOverlay({
     super.key,
@@ -24,12 +26,14 @@ class ControlsOverlay extends StatelessWidget {
     required this.currentPreset,
     required this.enableCaustics,
     required this.isControlsVisible,
+    required this.isLoading,
     required this.onFishCountChanged,
     required this.onDropFood,
     required this.onThemeChanged,
     required this.onToggleCaustics,
     required this.onResetAquarium,
     required this.onToggleControlsVisibility,
+    required this.onToggleLoading,
   });
 
   @override
@@ -259,6 +263,12 @@ class ControlsOverlay extends StatelessWidget {
                     onTap: () {
                       if (fishCount < 25) onFishCountChanged(fishCount + 1);
                     },
+                  ),
+                  _buildActionButton(
+                    icon: isLoading ? Icons.stop_circle : Icons.play_circle,
+                    label: isLoading ? 'Stop Load' : 'Load Circle',
+                    color: isLoading ? Colors.deepOrangeAccent : Colors.cyanAccent,
+                    onTap: onToggleLoading,
                   ),
                   _buildActionButton(
                     icon: Icons.refresh,
