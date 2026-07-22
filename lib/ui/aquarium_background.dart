@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../models/fish.dart';
 import '../models/aquatic_creature.dart';
+import '../models/aquatic.dart';
 import '../models/ripple.dart';
 import '../models/food_pellet.dart';
 import '../models/theme.dart';
@@ -19,10 +20,10 @@ import 'aquarium_controller.dart';
 /// Use as a standalone screen or wrap your app content:
 /// ```dart
 /// AquariumBackground(
-///   populations: {
-///     'guppy': 2,
-///     'goldfish': 3,
-///     'jellyfish': 1,
+///   populations: const {
+///     Aquatic.guppy: 2,
+///     Aquatic.goldfish: 3,
+///     Aquatic.jellyfish: 1,
 ///   },
 ///   themePreset: AquariumThemePreset.crystalLagoon,
 ///   child: MyScreenContent(),
@@ -31,7 +32,7 @@ import 'aquarium_controller.dart';
 class AquariumBackground extends StatefulWidget {
   final Widget? child;
   final AquariumController? controller;
-  final Map<String, int>? populations;
+  final Map<Aquatic, int>? populations;
   final AquariumThemePreset themePreset;
   final bool enableCaustics;
   final bool enableControls;
@@ -40,7 +41,7 @@ class AquariumBackground extends StatefulWidget {
   final ValueChanged<Offset>? onTap;
 
   const AquariumBackground({
-    super.key,
+    key,
     this.child,
     this.controller,
     this.populations,
@@ -50,7 +51,7 @@ class AquariumBackground extends StatefulWidget {
     this.enableTouchRipples = true,
     this.enableSwipeRipples = true,
     this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   State<AquariumBackground> createState() => _AquariumBackgroundState();
@@ -121,82 +122,6 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
     }
   }
 
-  FishSpecies? _parseFishSpecies(String key) {
-    final clean = key.replaceAll(RegExp(r'\s+'), '').toLowerCase();
-    switch (clean) {
-      case 'koisanke':
-      case 'sankekoi':
-      case 'sanke':
-        return FishSpecies.koiSanke;
-      case 'koikohaku':
-      case 'kohaku':
-        return FishSpecies.koiKohaku;
-      case 'koitancho':
-      case 'tancho':
-        return FishSpecies.koiTancho;
-      case 'goldfish':
-        return FishSpecies.goldfish;
-      case 'blackmoor':
-        return FishSpecies.blackMoor;
-      case 'bettasplendens':
-      case 'betta':
-        return FishSpecies.bettaSplendens;
-      case 'bluetang':
-        return FishSpecies.blueTang;
-      case 'neontetra':
-      case 'neon':
-        return FishSpecies.neonTetra;
-      case 'discusfish':
-      case 'discus':
-        return FishSpecies.discusFish;
-      case 'angelfish':
-      case 'angel':
-        return FishSpecies.angelFish;
-      case 'clownfish':
-      case 'clown':
-        return FishSpecies.clownfish;
-      case 'fancyguppy':
-      case 'guppy':
-        return FishSpecies.fancyGuppy;
-      default:
-        for (var species in FishSpecies.values) {
-          if (species.name.toLowerCase() == clean) {
-            return species;
-          }
-        }
-        return null;
-    }
-  }
-
-  CreatureType? _parseCreatureType(String key) {
-    final clean = key.replaceAll(RegExp(r'\s+'), '').toLowerCase();
-    switch (clean) {
-      case 'jellyfish':
-      case 'jelly':
-        return CreatureType.jellyfish;
-      case 'seaturtle':
-      case 'turtle':
-        return CreatureType.seaTurtle;
-      case 'mantaray':
-      case 'manta':
-        return CreatureType.mantaRay;
-      case 'seahorse':
-        return CreatureType.seahorse;
-      case 'starfish':
-        return CreatureType.starfish;
-      case 'hermitcrab':
-      case 'crab':
-        return CreatureType.hermitCrab;
-      default:
-        for (var type in CreatureType.values) {
-          if (type.name.toLowerCase() == clean) {
-            return type;
-          }
-        }
-        return null;
-    }
-  }
-
   void _initAquarium() {
     final Size size = MediaQuery.of(context).size;
     _fishes.clear();
@@ -206,43 +131,44 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
       int fishIndex = 0;
       int creatureIndex = 0;
 
-      widget.populations!.forEach((key, count) {
+      widget.populations!.forEach((aquatic, count) {
         if (count <= 0) return;
 
-        final FishSpecies? fishSpecies = _parseFishSpecies(key);
-        if (fishSpecies != null) {
-          for (int i = 0; i < count; i++) {
-            double angle = _random.nextDouble() * 2 * pi;
-            double scale = 0.85 + _random.nextDouble() * 0.45;
-            double x = 60.0 + _random.nextDouble() * (size.width - 120.0);
-            double y = 60.0 + _random.nextDouble() * (size.height - 120.0);
+        if (aquatic.isFish) {
+          final FishSpecies? fishSpecies = aquatic.fishSpecies;
+          if (fishSpecies != null) {
+            for (int i = 0; i < count; i++) {
+              double angle = _random.nextDouble() * 2 * pi;
+              double scale = 0.85 + _random.nextDouble() * 0.45;
+              double x = 60.0 + _random.nextDouble() * (size.width - 120.0);
+              double y = 60.0 + _random.nextDouble() * (size.height - 120.0);
 
-            _fishes.add(Fish(
-              id: fishIndex++,
-              position: Offset(x, y),
-              angle: angle,
-              species: fishSpecies,
-              scale: scale,
-            ));
+              _fishes.add(Fish(
+                id: fishIndex++,
+                position: Offset(x, y),
+                angle: angle,
+                species: fishSpecies,
+                scale: scale,
+              ));
+            }
           }
-          return;
-        }
+        } else {
+          final CreatureType? creatureType = aquatic.creatureType;
+          if (creatureType != null) {
+            for (int i = 0; i < count; i++) {
+              double x = 80.0 + _random.nextDouble() * (size.width - 160.0);
+              double y = (CreatureConfig.getConfig(creatureType).isSeabedDweller)
+                  ? size.height - 35.0
+                  : 90.0 + _random.nextDouble() * (size.height - 220.0);
 
-        final CreatureType? creatureType = _parseCreatureType(key);
-        if (creatureType != null) {
-          for (int i = 0; i < count; i++) {
-            double x = 80.0 + _random.nextDouble() * (size.width - 160.0);
-            double y = (CreatureConfig.getConfig(creatureType).isSeabedDweller)
-                ? size.height - 35.0
-                : 90.0 + _random.nextDouble() * (size.height - 220.0);
-
-            _creatures.add(AquaticCreature(
-              id: creatureIndex++,
-              position: Offset(x, y),
-              angle: (creatureType == CreatureType.seahorse) ? -pi / 2 : _random.nextDouble() * 2 * pi,
-              type: creatureType,
-              scale: 0.9 + _random.nextDouble() * 0.35,
-            ));
+              _creatures.add(AquaticCreature(
+                id: creatureIndex++,
+                position: Offset(x, y),
+                angle: (creatureType == CreatureType.seahorse) ? -pi / 2 : _random.nextDouble() * 2 * pi,
+                type: creatureType,
+                scale: 0.9 + _random.nextDouble() * 0.35,
+              ));
+            }
           }
         }
       });
@@ -324,7 +250,6 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
   }
 
   void _addRipple(Offset position, [double amplitude = 1.0, double maxRadius = 160.0]) {
-    // Limit to at most 6 active ripples concurrently to completely eliminate rendering lag on mobile GPUs
     if (_ripples.length > 5) {
       _ripples.removeAt(0);
     }

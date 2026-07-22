@@ -28,7 +28,7 @@ Add `aqua_bottle` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  aqua_bottle: ^1.1.1
+  aqua_bottle: ^1.2.0
 ```
 
 Or reference via Git:
@@ -66,11 +66,12 @@ class MyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AquariumBackground(
       populations: const {
-        'koiSanke': 2,
-        'fancyGuppy': 4,
-        'goldfish': 2,
-        'jellyfish': 2,
-        'seaTurtle': 1,
+        Aquatic.koiSanke: 2,
+        Aquatic.guppy: 4,
+        Aquatic.goldfish: 2,
+        Aquatic.jellyfish: 2,
+        Aquatic.turtle: 1,
+        Aquatic.manta: 1,
       },
       themePreset: AquariumThemePreset.crystalLagoon,
       enableTouchRipples: true, // Listens to touch/drag and generates water ripples

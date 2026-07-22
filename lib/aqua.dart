@@ -2,6 +2,7 @@ library;
 
 export 'models/fish.dart' show Fish, FishSpecies, FishSpeciesConfig;
 export 'models/aquatic_creature.dart' show AquaticCreature, CreatureType, CreatureConfig;
+export 'models/aquatic.dart' show Aquatic, AquaticMapper;
 export 'models/ripple.dart' show Ripple;
 export 'models/food_pellet.dart' show FoodPellet;
 export 'models/theme.dart' show AquariumThemeData, AquariumThemePreset;

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.2.0
+
+- Upgraded the `populations` configuration map to use strongly-typed `Aquatic` enum keys instead of dynamic strings (e.g. `Aquatic.manta: 1`).
+- Exported unified `Aquatic` enum containing all 18 fish and marine creature species under simple, clean naming conventions (e.g. `guppy`, `betta`, `manta`, `turtle`).
+
 ## 1.1.1
 
 - Fixed performance hanging issues on mobile devices during multitouch or rapid swipe gestures.
