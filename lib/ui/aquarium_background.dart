@@ -333,7 +333,18 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
             ),
           ),
 
-        // 7. Optional Glassmorphism Controls Overlay (placed on top of the touch interceptor to prevent controls from triggering ripples)
+        // 7. GestureDetector strictly for double-tap-to-feed (translucent, only overrides onDoubleTapDown)
+        if (widget.enableTouchRipples)
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onDoubleTapDown: (details) {
+                _dropFood(details.localPosition);
+              },
+            ),
+          ),
+
+        // 8. Optional Glassmorphism Controls Overlay (placed on top of the touch interceptors to prevent overlay clicks from triggering ripples/feeding)
         if (widget.enableControls || _isControlsVisible)
           ControlsOverlay(
             fishCount: _fishes.length,

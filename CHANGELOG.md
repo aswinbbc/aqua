@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.8
+
+- Fixed double-tap-to-feed gesture detection by adding a specialized translucent double-tap gesture interceptor on top of child app screens.
+
 ## 1.0.7
 
 - Fixed reactive touch-to-ripple gesture detection when wrapping arbitrary child screens by placing the pointer listener on top of child layers using translucent hit-testing.
