@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.3.0
+
+- Added animated rising water bubbles physics simulation to the aquarium background.
+- Added `enableBubbles` toggle configuration (default `true`) to allow developers to enable or disable bubbles drawing in the background.
+
 ## 1.2.0
 
 - Upgraded the `populations` configuration map to use strongly-typed `Aquatic` enum keys instead of dynamic strings (e.g. `Aquatic.manta: 1`).

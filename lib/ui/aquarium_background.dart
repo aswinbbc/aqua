@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/fish.dart';
 import '../models/aquatic_creature.dart';
 import '../models/aquatic.dart';
+import '../models/bubble.dart';
 import '../models/ripple.dart';
 import '../models/food_pellet.dart';
 import '../models/theme.dart';
@@ -11,6 +12,7 @@ import '../simulation/creature_behavior_engine.dart';
 import '../renderers/environment_painter.dart';
 import '../renderers/fish_painter.dart';
 import '../renderers/creature_painter.dart';
+import '../renderers/bubble_painter.dart';
 import '../renderers/water_surface_painter.dart';
 import 'controls_overlay.dart';
 import 'aquarium_controller.dart';
@@ -26,6 +28,7 @@ import 'aquarium_controller.dart';
 ///     Aquatic.jellyfish: 1,
 ///   },
 ///   themePreset: AquariumThemePreset.crystalLagoon,
+///   enableBubbles: true,
 ///   child: MyScreenContent(),
 /// )
 /// ```
@@ -38,6 +41,7 @@ class AquariumBackground extends StatefulWidget {
   final bool enableControls;
   final bool enableTouchRipples;
   final bool enableSwipeRipples;
+  final bool enableBubbles;
   final ValueChanged<Offset>? onTap;
 
   const AquariumBackground({
@@ -50,6 +54,7 @@ class AquariumBackground extends StatefulWidget {
     this.enableControls = false,
     this.enableTouchRipples = true,
     this.enableSwipeRipples = true,
+    this.enableBubbles = true,
     this.onTap,
   }) : super(key: key);
 
@@ -67,6 +72,7 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
   List<AquaticCreature> _creatures = [];
   final List<Ripple> _ripples = [];
   final List<FoodPellet> _foodPellets = [];
+  final List<Bubble> _bubbles = [];
 
   // Track position of each pointer to throttle swipe ripples by distance
   final Map<int, Offset> _lastPointerPositions = {};
@@ -231,6 +237,30 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
       }
 
       final Size screenSize = MediaQuery.of(context).size;
+
+      // Update bubbles
+      if (widget.enableBubbles) {
+        _bubbles.removeWhere((b) => b.isExpired);
+        for (var bubble in _bubbles) {
+          bubble.update(dt);
+        }
+
+        // Spawn bubbles from bottom of screen randomly
+        if (_bubbles.length < 35 && _random.nextDouble() < 0.12) {
+          final double bubbleX = _random.nextDouble() * screenSize.width;
+          final double bubbleRadius = 3.0 + _random.nextDouble() * 8.0;
+          _bubbles.add(Bubble(
+            position: Offset(bubbleX, screenSize.height + bubbleRadius + 5.0),
+            speed: 40.0 + _random.nextDouble() * 55.0,
+            radius: bubbleRadius,
+            driftFrequency: 1.0 + _random.nextDouble() * 2.0,
+            driftAmplitude: 0.5 + _random.nextDouble() * 1.5,
+          ));
+        }
+      } else {
+        _bubbles.clear();
+      }
+
       _fishEngine.update(
         fishes: _fishes,
         ripples: _ripples,
@@ -344,6 +374,13 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
               creatures: _creatures,
               animationTime: _animationTime,
             ),
+          ),
+
+        // 2.5. Rising Water Bubbles Layer
+        if (widget.enableBubbles && _bubbles.isNotEmpty)
+          CustomPaint(
+            size: size,
+            painter: BubblePainter(bubbles: _bubbles),
           ),
 
         // 3. Fish Swimming Layer
