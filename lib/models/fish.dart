@@ -234,6 +234,12 @@ enum FishState {
   loading,
 }
 
+enum FishLoadingPhase {
+  none,
+  aligningLine,
+  orbitingCircle,
+}
+
 class Fish {
   final int id;
   Offset position;
@@ -247,6 +253,7 @@ class Fish {
   final double depth; // 0.5 (deep underwater) to 1.25 (shallow surface)
 
   FishState state;
+  FishLoadingPhase loadingPhase;
   double stateTimer;
   
   double wigglePhase;
@@ -269,6 +276,7 @@ class Fish {
         targetAngle = angle,
         angularVelocity = 0.0,
         state = FishState.wandering,
+        loadingPhase = FishLoadingPhase.none,
         stateTimer = 0.0,
         wigglePhase = Random().nextDouble() * 2 * pi,
         gillPhase = Random().nextDouble() * 2 * pi,

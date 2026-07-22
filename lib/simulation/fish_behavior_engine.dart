@@ -38,31 +38,63 @@ class FishBehaviorEngine {
     // Loading vortex vortex vortex
     if (isLoading) {
       fish.state = FishState.loading;
+      if (fish.loadingPhase == FishLoadingPhase.none) {
+        fish.loadingPhase = FishLoadingPhase.aligningLine;
+      }
     } else if (fish.state == FishState.loading) {
       fish.state = FishState.wandering;
+      fish.loadingPhase = FishLoadingPhase.none;
       fish.stateTimer = 0.0;
     }
 
-    // Special behavior override for circular vortex loading screen
+    // Special behavior override for circular vortex loading screen (Stage 1: Line, Stage 2: Circle)
     if (fish.state == FishState.loading) {
       final Offset center = Offset(bounds.width / 2, bounds.height / 2);
-      final double distToCenter = (fish.position - center).distance;
 
-      // Group fishes into concentric ring orbits based on ID
-      final double targetRadius = 60.0 + (fish.id % 4) * 15.0;
-      final double angleFromCenter = atan2(fish.position.dy - center.dy, fish.position.dx - center.dx);
+      // Stage 1: Swim towards horizontal center line alignment
+      if (fish.loadingPhase == FishLoadingPhase.aligningLine) {
+        double targetY = bounds.height / 2;
+        double padding = 60.0;
+        double availableWidth = bounds.width - padding * 2;
+        int listIndex = allFishes.indexOf(fish);
+        if (listIndex == -1) listIndex = fish.id;
 
-      // Desired steering vectors:
-      // 1. Clockwise tangent orbiting vector
-      final Offset tangent = Offset(-sin(angleFromCenter), cos(angleFromCenter));
-      
-      // 2. Correction vector to steer them towards their ring orbits
-      final Offset radialDir = (center - fish.position) / (distToCenter.clamp(1.0, double.infinity));
-      final double radialWeight = (distToCenter - targetRadius).clamp(-150.0, 150.0) / 45.0;
+        double step = (allFishes.length > 1)
+            ? (availableWidth / (allFishes.length - 1))
+            : 0.0;
+        double targetX = padding + listIndex * step;
+        Offset targetPos = Offset(targetX, targetY);
 
-      final Offset desiredForce = tangent * 1.5 + radialDir * radialWeight * 2.8;
-      if (desiredForce.distance > 0.01) {
-        totalSteering += (desiredForce / desiredForce.distance) * 4.5;
+        double distToTarget = (fish.position - targetPos).distance;
+        if (distToTarget < 25.0) {
+          // Reached line target, transition to rotating circle stage
+          fish.loadingPhase = FishLoadingPhase.orbitingCircle;
+        } else {
+          Offset toTarget = targetPos - fish.position;
+          totalSteering += (toTarget / toTarget.distance) * 4.8;
+        }
+      }
+
+      // Stage 2: Swim in a coordinated circle orbit around center
+      if (fish.loadingPhase == FishLoadingPhase.orbitingCircle) {
+        final double distToCenter = (fish.position - center).distance;
+
+        // Group fishes into concentric ring orbits based on ID
+        final double targetRadius = 60.0 + (fish.id % 4) * 15.0;
+        final double angleFromCenter = atan2(fish.position.dy - center.dy, fish.position.dx - center.dx);
+
+        // Desired steering vectors:
+        // 1. Clockwise tangent orbiting vector
+        final Offset tangent = Offset(-sin(angleFromCenter), cos(angleFromCenter));
+        
+        // 2. Correction vector to steer them towards their ring orbits
+        final Offset radialDir = (center - fish.position) / (distToCenter.clamp(1.0, double.infinity));
+        final double radialWeight = (distToCenter - targetRadius).clamp(-150.0, 150.0) / 45.0;
+
+        final Offset desiredForce = tangent * 1.5 + radialDir * radialWeight * 2.8;
+        if (desiredForce.distance > 0.01) {
+          totalSteering += (desiredForce / desiredForce.distance) * 4.5;
+        }
       }
 
       double desiredAngle = fish.angle;
@@ -76,8 +108,8 @@ class FishBehaviorEngine {
       fish.angle += fish.angularVelocity * dt;
       fish.angle = _normalizeAngle(fish.angle);
 
-      // Smooth target vortex speed
-      double targetSpeed = fish.config.maxSpeed * 0.85;
+      // Minor speed increase during loading (1.25x max speed vs standard 0.55x)
+      double targetSpeed = fish.config.maxSpeed * 1.25;
       Offset forward = Offset(cos(fish.angle), sin(fish.angle));
       double currentSpeed = fish.velocity.distance;
       double newSpeed = currentSpeed + (targetSpeed - currentSpeed) * (4.5 * dt).clamp(0.0, 1.0);

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.2.2
+
+- Implemented a two-stage animation sequence during loading: fish first swim to align on a single evenly-spaced horizontal center line before forming the rotating loading circle vortex.
+- Increased the swimming speed of fish slightly (1.25x maximum speed) during the loading sequences for prompt alignment.
+
 ## 1.2.1
 
 - Added `startLoading()` and `stopLoading()` capabilities to `AquariumController`. When loading is active, fish form a rotating loading circle spinner.
