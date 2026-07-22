@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.10
+
+- Corrected README demo element to use standard Markdown image tags instead of HTML `<video>` tags for rendering compatibility on `pub.dev`.
+
 ## 1.0.9
 
 - Removed `google_fonts` dependency from the package to prevent version conflicts with transitive dependencies (e.g. `http`) in parent projects.

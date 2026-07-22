@@ -8,9 +8,7 @@ Features 12 hyper-realistic fish species (_Koi, Betta, Discus, Clownfish, Angelf
 
 ## Interactive Feature Actions Demo
 
-<video src="https://raw.githubusercontent.com/aswinbbc/aqua/main/doc/demo.gif" autoplay loop muted playsinline width="100%"></video>
-
-[![Watch Video Demo](https://img.shields.io/badge/Demo-Watch%20Video-blue?style=for-the-badge)](https://raw.githubusercontent.com/aswinbbc/aqua/main/doc/demo.gif)
+![Aqua Live Reactive Aquarium Demo](https://raw.githubusercontent.com/aswinbbc/aqua/main/doc/demo.gif)
 
 ---
 
@@ -30,7 +28,7 @@ Add `aqua_bottle` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  aqua_bottle: ^1.0.9
+  aqua_bottle: ^1.0.10
 ```
 
 Or reference via Git:
