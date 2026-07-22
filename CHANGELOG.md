@@ -1,14 +1,9 @@
 # CHANGELOG
 
-## 1.4.0
+## 1.2.1
 
-- Added `startLoading()` and `stopLoading()` capabilities to `AquariumController`.
-- When loading is active, all fish swim to the center of the screen and form a coordinated concentric rotating circle vortex representing a loading spinner. Calling `stopLoading()` disperses the fish back to free-swimming.
-
-## 1.3.0
-
-- Added animated rising water bubbles physics simulation to the aquarium background.
-- Added `enableBubbles` toggle configuration (default `true`) to allow developers to enable or disable bubbles drawing in the background.
+- Added `startLoading()` and `stopLoading()` capabilities to `AquariumController`. When loading is active, fish form a rotating loading circle spinner.
+- Added animated rising water bubbles physics simulation to the background with `enableBubbles` toggle configuration.
 
 ## 1.2.0
 
