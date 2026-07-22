@@ -2,15 +2,15 @@
 
 A **60fps reactive water wave ripple physics & aquatic simulation background package** for Flutter applications.
 
-Features 12 hyper-realistic fish species (*Koi, Betta, Discus, Clownfish, Angelfish, Guppy, Blue Tang, Neon Tetra, Black Moor*), 6 non-fish marine creatures (*Bioluminescent Jellyfish, Green Sea Turtle, Manta Ray, Seahorse, Starfish, Hermit Crab*), physical optical water wave refraction, splash particles, and dynamic sunlight caustics.
+Features 12 hyper-realistic fish species (_Koi, Betta, Discus, Clownfish, Angelfish, Guppy, Blue Tang, Neon Tetra, Black Moor_), 6 non-fish marine creatures (_Bioluminescent Jellyfish, Green Sea Turtle, Manta Ray, Seahorse, Starfish, Hermit Crab_), physical optical water wave refraction, splash particles, and dynamic sunlight caustics.
 
 ---
 
 ## Interactive Feature Actions Demo
 
-<video src="https://raw.githubusercontent.com/aswinbbc/aqua/main/doc/demo.mp4" autoplay loop muted playsinline width="100%"></video>
+<video src="https://raw.githubusercontent.com/aswinbbc/aqua/main/doc/demo.gif" autoplay loop muted playsinline width="100%"></video>
 
-[![Watch Video Demo](https://img.shields.io/badge/Demo-Watch%20Video-blue?style=for-the-badge)](https://raw.githubusercontent.com/aswinbbc/aqua/main/doc/demo.mp4)
+[![Watch Video Demo](https://img.shields.io/badge/Demo-Watch%20Video-blue?style=for-the-badge)](https://raw.githubusercontent.com/aswinbbc/aqua/main/doc/demo.gif)
 
 ---
 
@@ -19,7 +19,7 @@ Features 12 hyper-realistic fish species (*Koi, Betta, Discus, Clownfish, Angelf
 - 💧 **Interactive Water Wave Physics**: Touch & drag gesture detection spawning spreading liquid wave trains with convex lens optical refraction & splash droplet particles.
 - 🐟 **12 Realistic Fish Species**: Procedural 10-joint serpentine skeleton wave animation, operculum gill respiration, rotational torque physics, and $z$-depth water column parallax shading.
 - 🪼 **6 Marine Creature Types**: Bioluminescent jellyfish bell pulsation, green sea turtle paddling, manta ray wing undulation, seahorse coronet crown, starfish, and hermit crabs.
-- 🎨 **Aquatic Presets**: *Crystal Lagoon*, *Deep Ocean*, *Sunset Pond*, and *Emerald Reef*.
+- 🎨 **Aquatic Presets**: _Crystal Lagoon_, _Deep Ocean_, _Sunset Pond_, and _Emerald Reef_.
 - 🎮 **Programmatic Control**: Use `AquariumController` to trigger water wave ripples, drop food pellets, add/remove fish, or switch water themes from your own app buttons!
 
 ---
@@ -44,6 +44,7 @@ dependencies:
 ```
 
 Run:
+
 ```bash
 flutter pub get
 ```
