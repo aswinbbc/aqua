@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.7
+
+- Fixed reactive touch-to-ripple gesture detection when wrapping arbitrary child screens by placing the pointer listener on top of child layers using translucent hit-testing.
+
 ## 1.0.6
 
 - Replaced README GIF demo with a high-clarity 60fps MP4 video demonstration for perfect color rendering and smooth playback.
@@ -12,10 +16,6 @@
 ## 1.0.4
 
 - Replaced README GIF demo with a high-definition web browser simulation demonstration showing 60fps reactive water waves, feeding mechanisms, and creatures.
-
-## 1.0.3
-
-- Replaced README GIF demo with a high-definition feature demonstration video showing live water wave ripples, food drop feeding reaction, and aquatic theme switching.
 
 ## 1.0.2
 

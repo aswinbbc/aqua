@@ -314,7 +314,10 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
           ),
         ),
 
-        // 5. Reactive Touch & Drag Listener for Water Wave Ripples
+        // 5. Child UI Content Layer
+        if (widget.child != null) Positioned.fill(child: widget.child!),
+
+        // 6. Reactive Touch & Drag Listener (placed ON TOP of child so it intercepts touches, translucent)
         if (widget.enableTouchRipples)
           Positioned.fill(
             child: Listener(
@@ -330,7 +333,7 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
             ),
           ),
 
-        // 6. Optional Glassmorphism Controls Overlay
+        // 7. Optional Glassmorphism Controls Overlay (placed on top of the touch interceptor to prevent controls from triggering ripples)
         if (widget.enableControls || _isControlsVisible)
           ControlsOverlay(
             fishCount: _fishes.length,
@@ -358,9 +361,6 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
               });
             },
           ),
-
-        // 7. Child UI Content Layer
-        if (widget.child != null) Positioned.fill(child: widget.child!),
       ],
     );
 
