@@ -13,11 +13,12 @@ class FishBehaviorEngine {
     required List<FoodPellet> foodPellets,
     required Size bounds,
     required double dt,
+    bool isLoading = false,
   }) {
     if (bounds.width <= 0 || bounds.height <= 0) return;
 
     for (var fish in fishes) {
-      _updateFishBehavior(fish, fishes, ripples, foodPellets, bounds, dt);
+      _updateFishBehavior(fish, fishes, ripples, foodPellets, bounds, dt, isLoading);
       _updateSpineSkeleton(fish, dt);
     }
   }
@@ -29,9 +30,62 @@ class FishBehaviorEngine {
     List<FoodPellet> foodPellets,
     Size bounds,
     double dt,
+    bool isLoading,
   ) {
     fish.stateTimer += dt;
     Offset totalSteering = Offset.zero;
+
+    // Loading vortex vortex vortex
+    if (isLoading) {
+      fish.state = FishState.loading;
+    } else if (fish.state == FishState.loading) {
+      fish.state = FishState.wandering;
+      fish.stateTimer = 0.0;
+    }
+
+    // Special behavior override for circular vortex loading screen
+    if (fish.state == FishState.loading) {
+      final Offset center = Offset(bounds.width / 2, bounds.height / 2);
+      final double distToCenter = (fish.position - center).distance;
+
+      // Group fishes into concentric ring orbits based on ID
+      final double targetRadius = 60.0 + (fish.id % 4) * 15.0;
+      final double angleFromCenter = atan2(fish.position.dy - center.dy, fish.position.dx - center.dx);
+
+      // Desired steering vectors:
+      // 1. Clockwise tangent orbiting vector
+      final Offset tangent = Offset(-sin(angleFromCenter), cos(angleFromCenter));
+      
+      // 2. Correction vector to steer them towards their ring orbits
+      final Offset radialDir = (center - fish.position) / (distToCenter.clamp(1.0, double.infinity));
+      final double radialWeight = (distToCenter - targetRadius).clamp(-150.0, 150.0) / 45.0;
+
+      final Offset desiredForce = tangent * 1.5 + radialDir * radialWeight * 2.8;
+      if (desiredForce.distance > 0.01) {
+        totalSteering += (desiredForce / desiredForce.distance) * 4.5;
+      }
+
+      double desiredAngle = fish.angle;
+      if (totalSteering.distance > 0.05) {
+        desiredAngle = totalSteering.direction;
+      }
+
+      double angleDiff = _normalizeAngle(desiredAngle - fish.angle);
+      fish.angularVelocity += angleDiff * 8.5 * dt;
+      fish.angularVelocity *= 0.85;
+      fish.angle += fish.angularVelocity * dt;
+      fish.angle = _normalizeAngle(fish.angle);
+
+      // Smooth target vortex speed
+      double targetSpeed = fish.config.maxSpeed * 0.85;
+      Offset forward = Offset(cos(fish.angle), sin(fish.angle));
+      double currentSpeed = fish.velocity.distance;
+      double newSpeed = currentSpeed + (targetSpeed - currentSpeed) * (4.5 * dt).clamp(0.0, 1.0);
+
+      fish.velocity = forward * newSpeed;
+      fish.position += fish.velocity * dt;
+      return;
+    }
 
     // 1. Boundary Avoidance (smooth screen padding)
     double padding = 75.0;

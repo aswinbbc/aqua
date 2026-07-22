@@ -231,6 +231,7 @@ enum FishState {
   wandering,
   fleeing,
   seekingFood,
+  loading,
 }
 
 class Fish {

@@ -28,7 +28,7 @@ Add `aqua_bottle` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  aqua_bottle: ^1.3.0
+  aqua_bottle: ^1.4.0
 ```
 
 Or reference via Git:
@@ -119,6 +119,12 @@ _aquariumController.setTheme(AquariumThemePreset.deepOcean);
 
 // Update fish population count:
 _aquariumController.setFishCount(15);
+
+// Put aquarium into loading state (fishes school into a central circle vortex):
+_aquariumController.startLoading();
+
+// Stop loading state (fishes disperse back to normal):
+_aquariumController.stopLoading();
 ```
 
 ---

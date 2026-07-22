@@ -80,6 +80,7 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
   late AquariumThemePreset _currentThemePreset;
   late bool _enableCaustics;
   late bool _isControlsVisible;
+  bool _isLoading = false;
   double _animationTime = 0.0;
   DateTime _lastFrameTime = DateTime.now();
 
@@ -117,6 +118,8 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
       onSetTheme: (preset) => setState(() => _currentThemePreset = preset),
       onToggleCaustics: (enabled) => setState(() => _enableCaustics = enabled),
       onToggleControls: (visible) => setState(() => _isControlsVisible = visible),
+      onStartLoading: () => setState(() => _isLoading = true),
+      onStopLoading: () => setState(() => _isLoading = false),
     );
   }
 
@@ -267,6 +270,7 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
         foodPellets: _foodPellets,
         bounds: screenSize,
         dt: dt,
+        isLoading: _isLoading,
       );
 
       if (_creatures.isNotEmpty) {

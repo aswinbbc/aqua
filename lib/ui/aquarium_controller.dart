@@ -8,6 +8,8 @@ class AquariumController extends ChangeNotifier {
   void Function(AquariumThemePreset preset)? _onSetTheme;
   void Function(bool enabled)? _onToggleCaustics;
   void Function(bool visible)? _onToggleControls;
+  void Function()? _onStartLoading;
+  void Function()? _onStopLoading;
 
   void attach({
     required void Function(Offset position, double amplitude, double maxRadius) onAddRipple,
@@ -16,6 +18,8 @@ class AquariumController extends ChangeNotifier {
     required void Function(AquariumThemePreset preset) onSetTheme,
     required void Function(bool enabled) onToggleCaustics,
     required void Function(bool visible) onToggleControls,
+    required void Function() onStartLoading,
+    required void Function() onStopLoading,
   }) {
     _onAddRipple = onAddRipple;
     _onDropFood = onDropFood;
@@ -23,6 +27,8 @@ class AquariumController extends ChangeNotifier {
     _onSetTheme = onSetTheme;
     _onToggleCaustics = onToggleCaustics;
     _onToggleControls = onToggleControls;
+    _onStartLoading = onStartLoading;
+    _onStopLoading = onStopLoading;
   }
 
   void detach() {
@@ -32,6 +38,8 @@ class AquariumController extends ChangeNotifier {
     _onSetTheme = null;
     _onToggleCaustics = null;
     _onToggleControls = null;
+    _onStartLoading = null;
+    _onStopLoading = null;
   }
 
   /// Trigger a water ripple wavefront at [position].
@@ -62,5 +70,15 @@ class AquariumController extends ChangeNotifier {
   /// Toggle floating controls overlay visibility.
   void toggleControls([bool? visible]) {
     _onToggleControls?.call(visible ?? true);
+  }
+
+  /// Puts the aquarium into loading mode, attracting all fish to circle around the center.
+  void startLoading() {
+    _onStartLoading?.call();
+  }
+
+  /// Restores normal free-swimming behavior for all fish.
+  void stopLoading() {
+    _onStopLoading?.call();
   }
 }
