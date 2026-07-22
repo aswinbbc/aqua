@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.1
+
+- Fixed performance hanging issues on mobile devices during multitouch or rapid swipe gestures.
+- Added pointer move distance-throttling (minimum 55px delta) and limited concurrent active ripples to 6 to keep render computations extremely lightweight.
+- Added `enableSwipeRipples` configuration switch to disable swipe-to-ripple gestures entirely if desired.
+
 ## 1.1.0
 
 - Replaced `initialFishCount` and `enableCreatures` properties in `AquariumBackground` with a unified and flexible `populations` Map configuration. 

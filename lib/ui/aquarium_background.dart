@@ -36,6 +36,7 @@ class AquariumBackground extends StatefulWidget {
   final bool enableCaustics;
   final bool enableControls;
   final bool enableTouchRipples;
+  final bool enableSwipeRipples;
   final ValueChanged<Offset>? onTap;
 
   const AquariumBackground({
@@ -47,6 +48,7 @@ class AquariumBackground extends StatefulWidget {
     this.enableCaustics = true,
     this.enableControls = false,
     this.enableTouchRipples = true,
+    this.enableSwipeRipples = true,
     this.onTap,
   });
 
@@ -64,6 +66,9 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
   List<AquaticCreature> _creatures = [];
   final List<Ripple> _ripples = [];
   final List<FoodPellet> _foodPellets = [];
+
+  // Track position of each pointer to throttle swipe ripples by distance
+  final Map<int, Offset> _lastPointerPositions = {};
 
   late AquariumThemePreset _currentThemePreset;
   late bool _enableCaustics;
@@ -319,7 +324,8 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
   }
 
   void _addRipple(Offset position, [double amplitude = 1.0, double maxRadius = 160.0]) {
-    if (_ripples.length > 25) {
+    // Limit to at most 6 active ripples concurrently to completely eliminate rendering lag on mobile GPUs
+    if (_ripples.length > 5) {
       _ripples.removeAt(0);
     }
     _ripples.add(Ripple(
@@ -446,11 +452,25 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
               behavior: HitTestBehavior.translucent,
               onPointerDown: (event) {
                 _addRipple(event.localPosition, 1.0, 160.0);
+                _lastPointerPositions[event.pointer] = event.localPosition;
               },
               onPointerMove: (event) {
-                if (_random.nextDouble() < 0.35) {
-                  _addRipple(event.localPosition, 0.6, 100.0);
+                if (!widget.enableSwipeRipples) return;
+                final Offset? lastPos = _lastPointerPositions[event.pointer];
+                if (lastPos != null) {
+                  final double distance = (event.localPosition - lastPos).distance;
+                  // Only spawn a move ripple if the finger has moved at least 55 pixels to throttle calculation cost
+                  if (distance > 55.0) {
+                    _addRipple(event.localPosition, 0.6, 110.0);
+                    _lastPointerPositions[event.pointer] = event.localPosition;
+                  }
                 }
+              },
+              onPointerUp: (event) {
+                _lastPointerPositions.remove(event.pointer);
+              },
+              onPointerCancel: (event) {
+                _lastPointerPositions.remove(event.pointer);
               },
             ),
           ),
