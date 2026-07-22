@@ -356,68 +356,84 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
       final double targetX = padding + i * step;
       final Offset lineTarget = Offset(targetX, targetY);
 
-      Offset target;
+      // Perfect equal spacing along the shared circle perimeter:
+      double angle = _orbitBaseAngle + i * (2 * pi / allObjects.length);
+      Offset circleTarget = Offset(center.dx + cos(angle) * circleRadius, center.dy + sin(angle) * circleRadius);
+      double tangentAngle = _normalizeAngle(angle + pi / 2);
+
       bool isOrbiting = false;
+      bool isLocked = false;
 
       if (obj is Fish) {
-        // Fish waits for all fish to align, then joins sequentially with delay
-        if (_allAligned && _timeSinceAligned >= i * 0.36) {
+        if (obj.loadingPhase == FishLoadingPhase.orbitingCircle) {
           isOrbiting = true;
+          isLocked = true;
+        } else if (_allAligned && _timeSinceAligned >= i * 0.36) {
+          isOrbiting = true;
+          // Transition to locked orbit once arrived near the target spot
+          if ((obj.position - circleTarget).distance < 15.0) {
+            isLocked = true;
+            obj.loadingPhase = FishLoadingPhase.orbitingCircle;
+          }
         }
       } else if (obj is AquaticCreature) {
-        // Creature immediately joins the circle as soon as it aligns on the line target
-        final double distToLine = (obj.position - lineTarget).distance;
-        if (obj.loadingPhase == FishLoadingPhase.orbitingCircle || distToLine < 25.0) {
-          obj.loadingPhase = FishLoadingPhase.orbitingCircle;
+        if (obj.loadingPhase == FishLoadingPhase.orbitingCircle) {
           isOrbiting = true;
+          // Transition to locked orbit once arrived near the target spot
+          if ((obj.position - circleTarget).distance < 15.0) {
+            isLocked = true;
+          }
+        } else {
+          final double distToLine = (obj.position - lineTarget).distance;
+          if (distToLine < 25.0) {
+            obj.loadingPhase = FishLoadingPhase.orbitingCircle;
+            isOrbiting = true;
+          }
         }
       }
 
-      if (isOrbiting) {
-        // Perfect equal spacing along the shared circle perimeter:
-        double angle = _orbitBaseAngle + i * (2 * pi / allObjects.length);
-        target = Offset(center.dx + cos(angle) * circleRadius, center.dy + sin(angle) * circleRadius);
+      if (isLocked) {
+        obj.position = circleTarget;
+        obj.angle = tangentAngle;
+        obj.velocity = Offset(cos(tangentAngle), sin(tangentAngle)) * (circleRadius * 0.98);
       } else {
-        target = lineTarget;
-      }
+        Offset target = isOrbiting ? circleTarget : lineTarget;
+        final double distToTarget = (obj.position - target).distance;
 
-      final double distToTarget = (obj.position - target).distance;
+        // If in align stage and arrived at slot, idle and wait
+        if (!isOrbiting && distToTarget < 15.0) {
+          obj.velocity = Offset.zero;
+          // Turn smoothly to face right (military horizontal line format)
+          double angleDiff = _normalizeAngle(0.0 - obj.angle);
+          obj.angle += angleDiff * (8.5 * dt).clamp(0.0, 1.0);
+        } else {
+          // Active steering towards destination
+          Offset dir = target - obj.position;
+          double dist = dir.distance;
+          if (dist > 0.1) {
+            dir = dir / dist;
+          }
 
-      // If in align stage and arrived at slot, idle and wait
-      if (!isOrbiting && distToTarget < 15.0) {
-        obj.velocity = Offset.zero;
-        // Turn smoothly to face right (military horizontal line format)
-        double angleDiff = _normalizeAngle(0.0 - obj.angle);
-        obj.angle += angleDiff * (8.5 * dt).clamp(0.0, 1.0);
-      } else {
-        // Active steering towards destination
-        Offset dir = target - obj.position;
-        double dist = dir.distance;
-        if (dist > 0.1) {
-          dir = dir / dist;
+          // Fast movement during loading ("all creatures and fishes come fast")
+          double maxSpeed = (obj is Fish) ? obj.config.maxSpeed : obj.config.maxSpeed;
+          double speed = maxSpeed * 1.6;
+
+          double desiredAngle = dir.direction;
+          double angleDiff = _normalizeAngle(desiredAngle - obj.angle);
+          obj.angle += angleDiff * (9.5 * dt).clamp(0.0, 1.0);
+          obj.angle = _normalizeAngle(obj.angle);
+
+          obj.velocity = Offset(cos(obj.angle), sin(obj.angle)) * speed;
+          obj.position += obj.velocity * dt;
         }
-
-        // Fast movement during loading ("all creatures and fishes come fast")
-        double maxSpeed = (obj is Fish) ? obj.config.maxSpeed : obj.config.maxSpeed;
-        double speed = maxSpeed * 1.6;
-
-        double desiredAngle = dir.direction;
-        double angleDiff = _normalizeAngle(desiredAngle - obj.angle);
-        obj.angle += angleDiff * (9.5 * dt).clamp(0.0, 1.0);
-        obj.angle = _normalizeAngle(obj.angle);
-
-        obj.velocity = Offset(cos(obj.angle), sin(obj.angle)) * speed;
-        obj.position += obj.velocity * dt;
       }
 
       // Update models and animations wiggles/fins
       if (obj is Fish) {
         obj.state = FishState.loading;
-        obj.loadingPhase = isOrbiting ? FishLoadingPhase.orbitingCircle : FishLoadingPhase.aligningLine;
         _fishEngine.updateSpineSkeleton(obj, dt);
       } else if (obj is AquaticCreature) {
         obj.state = FishState.loading;
-        obj.loadingPhase = isOrbiting ? FishLoadingPhase.orbitingCircle : FishLoadingPhase.aligningLine;
         obj.flipperPhase += dt * 3.5;
         obj.pulsePhase += dt * 2.5;
       }

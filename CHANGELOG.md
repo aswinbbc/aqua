@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.6
+
+- Implemented strict circular orbit locking for all fishes and creatures once they arrive on the loading spinner. This eliminates overshoot-correction feedback loops that caused goldfish jittering and guppies spinning/rotating.
+
 ## 1.2.5
 
 - Calibrated loading-state wiggling speed (to `2.4x`) and body wave amplitude multiplier (to `0.32x`) to match slow, elegant circle gliding speed and prevent any unnatural fast vibrations.
