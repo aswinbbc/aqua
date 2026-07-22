@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.2.4
+
+- Refined fish tail and fin wiggling speeds during the loading state, smoothing out frantic high-frequency wiggles to create a gentle, realistic swim flow.
+- Optimized creature release sequence: non-fish creatures no longer wait for the entire parade of fish to align. As soon as a creature aligns on its parade spot, it immediately breaks away and joins the circle spinner.
+
 ## 1.2.3
 
 - Coordinated both fish and non-fish marine creatures to participate in the loading spinner sequences.

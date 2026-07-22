@@ -319,31 +319,34 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
     double availableWidth = bounds.width - padding * 2;
     double step = (allObjects.length > 1) ? (availableWidth / (allObjects.length - 1)) : 0.0;
 
-    // Check if every single fish and creature is aligned to the horizontal parade line
-    bool currentAligned = true;
+    // Check if all FISHES are aligned to the horizontal parade line (creatures don't block this check)
+    bool allFishesAligned = true;
     for (int i = 0; i < allObjects.length; i++) {
       final obj = allObjects[i];
+      if (obj is! Fish) continue; // Only check fish alignment
+      
       final double targetX = padding + i * step;
       final Offset targetPos = Offset(targetX, targetY);
       final double dist = (obj.position - targetPos).distance;
       if (dist >= 28.0) {
-        currentAligned = false;
+        allFishesAligned = false;
         break;
       }
     }
 
-    if (!_allAligned && currentAligned) {
+    if (!_allAligned && allFishesAligned) {
       _allAligned = true;
       _timeSinceAligned = 0.0;
     }
 
     if (_allAligned) {
       _timeSinceAligned += dt;
-      // Flawlessly rotate the circular spinner base angle
-      _orbitBaseAngle += dt * 0.98;
     } else {
       _timeSinceAligned = 0.0;
     }
+
+    // Flawlessly rotate the circular spinner base angle always
+    _orbitBaseAngle += dt * 0.98;
 
     final double circleRadius = 120.0;
     final Offset center = Offset(bounds.width / 2, bounds.height / 2);
@@ -356,9 +359,21 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
       Offset target;
       bool isOrbiting = false;
 
-      // Release one after another with spacing delay
-      if (_allAligned && _timeSinceAligned >= i * 0.36) {
-        isOrbiting = true;
+      if (obj is Fish) {
+        // Fish waits for all fish to align, then joins sequentially with delay
+        if (_allAligned && _timeSinceAligned >= i * 0.36) {
+          isOrbiting = true;
+        }
+      } else if (obj is AquaticCreature) {
+        // Creature immediately joins the circle as soon as it aligns on the line target
+        final double distToLine = (obj.position - lineTarget).distance;
+        if (obj.loadingPhase == FishLoadingPhase.orbitingCircle || distToLine < 25.0) {
+          obj.loadingPhase = FishLoadingPhase.orbitingCircle;
+          isOrbiting = true;
+        }
+      }
+
+      if (isOrbiting) {
         // Perfect equal spacing along the shared circle perimeter:
         double angle = _orbitBaseAngle + i * (2 * pi / allObjects.length);
         target = Offset(center.dx + cos(angle) * circleRadius, center.dy + sin(angle) * circleRadius);
@@ -368,7 +383,7 @@ class _AquariumBackgroundState extends State<AquariumBackground> with SingleTick
 
       final double distToTarget = (obj.position - target).distance;
 
-      // If in align stage and arrived at slot, idle and wait for parade sequence complete
+      // If in align stage and arrived at slot, idle and wait
       if (!isOrbiting && distToTarget < 15.0) {
         obj.velocity = Offset.zero;
         // Turn smoothly to face right (military horizontal line format)

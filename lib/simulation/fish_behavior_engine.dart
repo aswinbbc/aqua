@@ -237,14 +237,19 @@ class FishBehaviorEngine {
   void updateSpineSkeleton(Fish fish, double dt) {
     // 1. Update Wiggle Phase based on current speed
     double speedRatio = (fish.currentSpeed / fish.config.maxSpeed).clamp(0.1, 2.5);
-    double wiggleSpeed = 8.5 * speedRatio * fish.config.tailWiggleMultiplier;
+    
+    // Smooth gentle wiggle speed during loading instead of hyperactive fast wiggling
+    double wiggleSpeed = (fish.state == FishState.loading)
+        ? 4.6 * fish.config.tailWiggleMultiplier
+        : 8.5 * speedRatio * fish.config.tailWiggleMultiplier;
     fish.wigglePhase += dt * wiggleSpeed;
 
     double totalLength = fish.config.bodyLength * fish.scale;
     double segmentLength = totalLength / (Fish.numJoints - 1);
 
     // 2. Undulatory Traveling Wave Physics along Spine
-    double headSwayAmp = 0.07 * (0.4 + 0.6 * speedRatio);
+    double effectiveSpeedRatio = (fish.state == FishState.loading) ? 0.65 : speedRatio;
+    double headSwayAmp = 0.07 * (0.4 + 0.6 * effectiveSpeedRatio);
     fish.jointAngles[0] = fish.angle + sin(fish.wigglePhase) * headSwayAmp;
     fish.spineJoints[0] = fish.position;
 
@@ -252,7 +257,7 @@ class FishBehaviorEngine {
       double t = i / (Fish.numJoints - 1);
 
       // Amplitude increases towards tail with exponent curve
-      double waveAmplitude = (0.03 + 0.36 * pow(t, 1.35)) * (0.5 + 0.5 * speedRatio);
+      double waveAmplitude = (0.03 + 0.36 * pow(t, 1.35)) * (0.5 + 0.5 * effectiveSpeedRatio);
       double phaseShift = t * 3.3; // Phase delay along body
 
       double waveOffset = sin(fish.wigglePhase - phaseShift) * waveAmplitude;
