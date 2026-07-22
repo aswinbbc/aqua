@@ -5,6 +5,16 @@ import '../models/aquatic_creature.dart';
 class CreatureBehaviorEngine {
   final Random _random = Random();
 
+  double _normalizeAngle(double angle) {
+    while (angle > pi) {
+      angle -= 2 * pi;
+    }
+    while (angle < -pi) {
+      angle += 2 * pi;
+    }
+    return angle;
+  }
+
   void update({
     required List<AquaticCreature> creatures,
     required Size bounds,
@@ -32,6 +42,34 @@ class CreatureBehaviorEngine {
         case CreatureType.hermitCrab:
           _updateHermitCrabPhysics(creature, bounds, dt);
           break;
+      }
+    }
+
+    // Gentle separation check to prevent same-species creatures (like jellyfish) from overlapping/glitching
+    for (int i = 0; i < creatures.length; i++) {
+      for (int j = i + 1; j < creatures.length; j++) {
+        final c1 = creatures[i];
+        final c2 = creatures[j];
+        if (c1.type == c2.type) {
+          final double dist = (c1.position - c2.position).distance;
+          final double minDist = (c1.config.size + c2.config.size) * 0.7;
+          if (dist < minDist) {
+            Offset push = c1.position - c2.position;
+            if (push.distance > 0.01) {
+              push = push / push.distance;
+            } else {
+              push = Offset(_random.nextDouble() - 0.5, _random.nextDouble() - 0.5);
+              push = push / push.distance;
+            }
+            double force = (minDist - dist) * 0.4;
+            c1.position += push * force;
+            c2.position -= push * force;
+
+            // Nudge angles to steer away
+            c1.angle = _normalizeAngle(c1.angle + 0.12);
+            c2.angle = _normalizeAngle(c2.angle - 0.12);
+          }
+        }
       }
     }
   }

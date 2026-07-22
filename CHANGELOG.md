@@ -1,8 +1,15 @@
 # CHANGELOG
 
-## 1.2.7
+## 1.2.9
+
+- Added creature separation logic and collision boundaries inside the behavior engine. This gently steers same-species creatures (like jellyfish) away from each other when they overlap, preventing the double jellyfish overlap glitch.
+
+## 1.2.8
 
 - Added interactive bubble popping mechanics: tapping or swiping over rising water bubbles breaks/pops them instantly.
+
+## 1.2.7
+
 - Allowed the circle spinner sequence to trigger early as soon as any 3 objects are aligned on the horizontal parade line, letting the remaining objects join the circle dynamically as they arrive.
 - Corrected sea-bed dweller creature speeds (starfish, crabs, seahorses) to use a fast minimum speed of `125.0px/s` during loading, ensuring they align rapidly.
 - Supported canvas tangent rotation for Seahorse during the loading sequence so it aligns perfectly to the circle tangent direction.
