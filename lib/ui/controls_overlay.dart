@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/theme.dart';
 
 class ControlsOverlay extends StatelessWidget {
@@ -155,7 +154,7 @@ class ControlsOverlay extends StatelessWidget {
                     children: [
                       Text(
                         'AQUA SIMULATOR',
-                        style: GoogleFonts.orbitron(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 13,
                           fontWeight: FontWeight.bold,

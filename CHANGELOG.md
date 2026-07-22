@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.9
+
+- Removed `google_fonts` dependency from the package to prevent version conflicts with transitive dependencies (e.g. `http`) in parent projects.
+
 ## 1.0.8
 
 - Fixed double-tap-to-feed gesture detection by adding a specialized translucent double-tap gesture interceptor on top of child app screens.
