@@ -28,7 +28,7 @@ Add `aqua_bottle` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  aqua_bottle: ^1.0.10
+  aqua_bottle: ^1.1.0
 ```
 
 Or reference via Git:
@@ -65,9 +65,14 @@ class MyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AquariumBackground(
-      initialFishCount: 10,
+      populations: const {
+        'koiSanke': 2,
+        'fancyGuppy': 4,
+        'goldfish': 2,
+        'jellyfish': 2,
+        'seaTurtle': 1,
+      },
       themePreset: AquariumThemePreset.crystalLagoon,
-      enableCreatures: true,
       enableTouchRipples: true, // Listens to touch/drag and generates water ripples
       child: Scaffold(
         backgroundColor: Colors.transparent, // Allows live aquarium background to show through!

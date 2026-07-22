@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.1.0
+
+- Replaced `initialFishCount` and `enableCreatures` properties in `AquariumBackground` with a unified and flexible `populations` Map configuration. 
+- Allows developers to specify exact spawn counts for individual fish species and aquatic creatures using case-insensitive string names (e.g. `guppy: 2, jellyfish: 3`).
+
 ## 1.0.10
 
 - Corrected README demo element to use standard Markdown image tags instead of HTML `<video>` tags for rendering compatibility on `pub.dev`.
