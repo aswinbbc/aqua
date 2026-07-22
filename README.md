@@ -28,7 +28,7 @@ Add `aqua_bottle` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  aqua_bottle: ^1.2.4
+  aqua_bottle: ^1.2.5
 ```
 
 Or reference via Git:

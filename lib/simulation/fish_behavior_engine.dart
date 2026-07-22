@@ -240,7 +240,7 @@ class FishBehaviorEngine {
     
     // Smooth gentle wiggle speed during loading instead of hyperactive fast wiggling
     double wiggleSpeed = (fish.state == FishState.loading)
-        ? 4.6 * fish.config.tailWiggleMultiplier
+        ? 2.4 * fish.config.tailWiggleMultiplier
         : 8.5 * speedRatio * fish.config.tailWiggleMultiplier;
     fish.wigglePhase += dt * wiggleSpeed;
 
@@ -248,7 +248,7 @@ class FishBehaviorEngine {
     double segmentLength = totalLength / (Fish.numJoints - 1);
 
     // 2. Undulatory Traveling Wave Physics along Spine
-    double effectiveSpeedRatio = (fish.state == FishState.loading) ? 0.65 : speedRatio;
+    double effectiveSpeedRatio = (fish.state == FishState.loading) ? 0.32 : speedRatio;
     double headSwayAmp = 0.07 * (0.4 + 0.6 * effectiveSpeedRatio);
     fish.jointAngles[0] = fish.angle + sin(fish.wigglePhase) * headSwayAmp;
     fish.spineJoints[0] = fish.position;

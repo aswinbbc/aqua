@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.5
+
+- Calibrated loading-state wiggling speed (to `2.4x`) and body wave amplitude multiplier (to `0.32x`) to match slow, elegant circle gliding speed and prevent any unnatural fast vibrations.
+
 ## 1.2.4
 
 - Refined fish tail and fin wiggling speeds during the loading state, smoothing out frantic high-frequency wiggles to create a gentle, realistic swim flow.
